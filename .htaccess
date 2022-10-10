@@ -1,0 +1,25 @@
+# SiteGround cache stuff
+<IfModule mod_headers.c> 
+Header set Cache-Control "max-age=0,no-store"
+</IfModule>
+
+RewriteEngine on
+
+#http to https :-)
+#RewriteCond %{HTTPS} off
+#RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+AddType application/x-httpd-php .php .phtml .phtm
+
+# Respect existing directories :-)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule .* - [L]
+
+# EVERYTHING goes to index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Remove last / :-)
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} /(.*)/$
+RewriteRule ^ /%1 [R,L]
